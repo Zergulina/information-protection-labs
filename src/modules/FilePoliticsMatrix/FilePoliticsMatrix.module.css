@@ -1,0 +1,66 @@
+.Table {
+    border: solid 2px var(--retro-color);
+    border-collapse: collapse;
+}
+
+.FilePoliticsMatrix{
+    /* padding: 0px 10px 15px 10px; */
+}
+
+.FilePoliticsMatrixContainer{
+    overflow: auto;
+    height: calc(100% - 70px);
+    border: solid 1px var(--retro-color);
+    width: calc(100vw - 255px);
+}
+
+.FilePoliticsMatrixContainer::-webkit-scrollbar {
+    background-color: var(--retro-button-color);
+    width: 20px;
+    height: 20px;
+    padding: 0;
+
+    border-top: solid 2px black;
+    border-right: solid 2px #545454;
+    border-bottom: solid 2px #545454;
+    border-left: solid 2px black;
+}
+
+.FilePoliticsMatrixContainer::-webkit-scrollbar-thumb {
+    background-color: var(--retro-color);
+
+    border-top: solid 2px #545454;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
+    border-left: solid 2px #545454;
+}
+
+.FilePoliticsMatrixContainer::-webkit-scrollbar-corner {
+    background-color: var(--retro-color);
+
+    border-top: solid 2px #545454;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
+    border-left: solid 2px #545454;
+}
+
+.FilePoliticsMatrixWrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 25px;
+    padding: 0px 10px 25px 10px;
+}
+
+.Table td{
+    border: solid 2px var(--retro-color);
+    font-family: var(--retro-font);
+    font-size: var(--retro-font-size);
+    color: var(--retro-color);
+
+    padding: 3px 7px;
+}
+
+.Button {
+    width: 200px;
+}

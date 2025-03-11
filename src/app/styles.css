@@ -1,0 +1,26 @@
+:root {
+    --retro-font: "DosVGA";
+    --retro-font-size: 25px;
+
+    --retro-color: rgb(0, 108, 27);
+    --retro-button-color: #1a1a1a;
+    --main-background-color: #1c1c1c;
+
+    --retro-border: solid 2px var(--retro-color);
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--main-background-color);
+    overflow: hidden;
+}
+
+@font-face {
+    font-family: "DosVGA";
+    src: url("./fonts/perfectdosvga437.ttf");
+}

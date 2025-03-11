@@ -1,0 +1,57 @@
+.FilePoliticsUsersContainer {
+    padding: 5px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.Panel {
+    padding: 15px 10px 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.Panel::-webkit-scrollbar {
+    background-color: var(--retro-button-color);
+    width: 20px;
+
+    border-top: solid 2px black;
+    border-right: solid 2px #545454;
+    border-bottom: solid 2px #545454;
+    border-left: solid 2px black;
+}
+
+.Panel::-webkit-scrollbar-thumb {
+    background-color: var(--retro-color);
+
+    border-top: solid 2px #545454;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
+    border-left: solid 2px #545454;
+}
+
+.Row {
+    display: flex;
+    gap: 15px
+}
+
+.Label {
+    text-wrap: nowrap;
+    width: fit-content;
+}
+
+.InputContainer {
+    margin-top: -5px;
+    flex-grow: 1;
+}
+
+.Input {
+    width: 100%;
+}
+
+.Button{
+    width: 200px;
+}

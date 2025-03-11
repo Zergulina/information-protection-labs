@@ -1,0 +1,35 @@
+.FilePoliticsSettingContainer {
+    padding: 5px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px
+}
+
+.Row {
+    display: flex;
+    gap: 15px
+}
+
+.InputContainer {
+    margin-top: -5px;
+    flex-grow: 1;
+}
+
+.Input {
+    width: 100%;
+}
+
+.UserAmountInputLabel {
+    text-wrap: nowrap;
+    width: fit-content;
+}
+
+.ObjectAmountInputLabel {
+    text-wrap: nowrap;
+    width: fit-content;
+}
+
+
+.Button{
+    width: 200px;
+}

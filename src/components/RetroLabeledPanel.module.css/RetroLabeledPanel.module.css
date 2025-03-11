@@ -1,0 +1,12 @@
+.Label {
+    position: relative;
+    top:-12px;
+    margin-left:15px;
+    background-color: var(--main-background-color);
+    padding: 0 4px;
+    width: fit-content;
+}
+
+.RetroPanel {
+    margin-top: 12px;
+}

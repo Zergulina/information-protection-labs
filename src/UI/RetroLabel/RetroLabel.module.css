@@ -1,0 +1,5 @@
+.RetroLabel {
+    font-family: var(--retro-font);
+    font-size: var(--retro-font-size);
+    color: var(--retro-color);
+}

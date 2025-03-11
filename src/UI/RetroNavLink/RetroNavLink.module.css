@@ -1,0 +1,23 @@
+.RetroNavLink {
+    font-family: var(--retro-font);
+    font-size: var(--retro-font-size);
+    color: var(--retro-color);
+    background-color: var(--retro-button-color);
+    border-top: solid 2px #545454;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
+    border-left: solid 2px #545454;
+
+    text-decoration: none;
+
+    padding: 3px 7px;
+
+    display: block;
+}
+
+.RetroNavLinkActive {
+    border-top: solid 2px black;
+    border-right: solid 2px #545454;
+    border-bottom: solid 2px #545454;
+    border-left: solid 2px black;
+}

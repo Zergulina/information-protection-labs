@@ -1,0 +1,8 @@
+.RetroButton {
+    font-family: var(--retro-font);
+    font-size: var(--retro-font-size);
+    color: var(--retro-color);
+    background-color: var(--retro-button-color);
+
+    padding: 3px 7px;
+}
