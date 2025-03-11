@@ -5,6 +5,7 @@ import FilePoliticsUsers from '../../modules/FilePoliticsUsers/FilePoliticsUsers
 import FilePoliticsMatrix from '../../modules/FilePoliticsMatrix/FilePoliticsMatrix';
 import FilePoliticsConsole from '../../modules/FilePoliticsConsole/FilePoliticsConsole';
 import classes from './FilePoliticsPage.module.css'
+import { invoke } from '@tauri-apps/api/core';
 
 const FilePoliticsPage = () => {
     const [userAmount, setUserAmount] = useState<number>(0);
@@ -28,12 +29,16 @@ const FilePoliticsPage = () => {
 
         if (newFilePoliticsMatrix.length == 0) return;
         if (newFilePoliticsMatrix[0].length > objectAmount) {
+            for (let j = objectAmount; j < prevObjectAmount; j++) {
+                invoke("delete_file", {name: `C:/Users/zergu/source/foo/object${j+1}.txt`})
+            }
             for (let i = 0; i < newFilePoliticsMatrix.length; i++) {
                 newFilePoliticsMatrix[i] = newFilePoliticsMatrix[i].slice(0, objectAmount - prevObjectAmount)
             }
         } else {
             const prevLength = newFilePoliticsMatrix[0].length
             for (let j = 0; j < objectAmount - prevLength; j++) {
+                invoke("create_file", {name: `C:/Users/zergu/source/foo/object${j+1}.txt`})
                 newFilePoliticsMatrix[0].push(7);
             }
             for (let i = 1; i < newFilePoliticsMatrix.length; i++) {

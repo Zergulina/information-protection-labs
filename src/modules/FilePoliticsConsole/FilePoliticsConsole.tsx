@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import RetroInput from '../../UI/RetroInput/RetroInput';
 import RetroLabeledPanel from '../../components/RetroLabeledPanel.module.css/RetroLabeledPanel';
 import classes from './FilePoliticsConsole.module.css'
+import { invoke } from '@tauri-apps/api/core';
 
 type FilePoliticsConsoleProps = {
     users: string[],
@@ -18,6 +19,7 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
     const [currentCommand, setCurrentCommand] = useState<string | null>(null)
     const [grantPolicyObjectNumber, setGrantPolicyObjectNumber] = useState<number | null>(null)
     const [grantPolicyString, setGrantPolicyString] = useState<string | null>(null)
+    const [writeFlag, setWriteFlag] = useState<Boolean>(false);
 
     const commands = ["read", "write", "grant"]
 
@@ -39,6 +41,14 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
     const inputEnterHandler = () => {
         let addString = [`${currentUserIndex != null ? (currentUserIndex == 0 ? "root" : users[currentUserIndex - 1]) : ""}> ${consoleInput.substring(2)}`];
         setConsoleInput("> ");
+
+        if (writeFlag) {
+            const inputLineSubstring = consoleInput.substring(2);
+            invoke("write_to_file", {name: `C:/Users/zergu/source/foo/object${grantPolicyObjectNumber}.txt`, line: inputLineSubstring})
+            setConsoleLog(['SYSTEM>> Операция выполнена успешно.', ...consoleLog])
+            setWriteFlag(false);
+            return;
+        }
 
         if (grantPolicyString != null) {
             const userNameSubstring = consoleInput.substring(2);
@@ -89,7 +99,12 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
                     }
                     else {
                         if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][objectNumber - 1])[0] == 1) {
-                            addString = ['SYSTEM>> Операция выполнена успешно.', ...addString]
+                            invoke("read_file", {filename: `C:/Users/zergu/source/foo/object${objectNumber}.txt`}).then(res => {
+                                addString = ['SYSTEM>> Операция выполнена успешно.', 'SYSTEM>> ' + res as string, ...addString]
+                                setCurrentCommand(null);
+                                setConsoleLog([...addString, ...consoleLog])
+                                return
+                            })
                         }
                         else {
                             addString = ['SYSTEM>> Нет доступа для выполнения операции.', ...addString]
@@ -104,7 +119,9 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
                     }
                     else {
                         if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][objectNumber - 1])[1] == 1) {
-                            addString = ['SYSTEM>> Операция выполнена успешно.', ...addString]
+                            addString = ['SYSTEM>> Напишите строку для добавления в файл.', ...addString]
+                            setGrantPolicyObjectNumber(objectNumber);
+                            setWriteFlag(true)
                         }
                         else {
                             addString = ['SYSTEM>> Нет доступа для выполнения операции.', ...addString]
