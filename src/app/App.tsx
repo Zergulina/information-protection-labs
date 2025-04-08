@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import NavPanel from "../modules/NavPanel/NavPanel";
 import MandatFilePoliticsPage from "../pages/MandatFilePoliticsPage/MandatFilePoliticsPage";
 import GraphicKeyPage from "../pages/GraphicKeyPage/GraphicKeyPage";
+import KeyboardPage from "../pages/KeyboardPage/KeyboardPage";
 
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
@@ -23,6 +24,7 @@ function App() {
           <Route index element={<FilePoliticsPage />} />
           <Route path="lab3" element={<MandatFilePoliticsPage />} />
           <Route path="lab5" element={<GraphicKeyPage/>} />
+          <Route path="lab6" element={<KeyboardPage/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
