@@ -8,8 +8,10 @@ const NavPanel = () => {
     return (
         <div className ={classes.PageWrapper}>
             <RetroLabeledPanel label='Навигация' labelZIndex={0} className={classes.NavPanel}>
-                <div>
+                <div className={classes.NavLinkContainer}>
                     <RetroNavLink to={'/'} className={classes.NavLink}>Лаба 2</RetroNavLink>
+                    <RetroNavLink to={'/lab3'} className={classes.NavLink}>Лаба 3</RetroNavLink>
+                    <RetroNavLink to={'/lab5'} className={classes.NavLink}>Лаба 5</RetroNavLink>
                 </div>
             </RetroLabeledPanel>
             <Outlet/>

@@ -1,0 +1,36 @@
+.GraphicKeyPage {
+    height: calc(100% - 12px);
+    border-left: none;
+    flex-grow: 1;
+}
+
+.GraphicKeyPageContainer {
+    margin: -25px 0 0 12px;
+    padding: 20px 12px 0 0;
+    overflow-y: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.GraphicKeyPageContainer::-webkit-scrollbar {
+    background-color: var(--retro-button-color);
+    width: 20px;
+
+    border-top: solid 2px black;
+    border-right: solid 2px #545454;
+    border-bottom: solid 2px #545454;
+    border-left: solid 2px black;
+}
+
+.GraphicKeyPageContainer::-webkit-scrollbar-thumb {
+    background-color: var(--retro-color);
+
+    border-top: solid 2px #545454;
+    border-right: solid 2px black;
+    border-bottom: solid 2px black;
+    border-left: solid 2px #545454;
+}
+

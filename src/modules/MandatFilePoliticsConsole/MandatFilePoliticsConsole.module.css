@@ -1,6 +1,6 @@
 .FilePoliticsConsole {
     width: 100%;
-    height: 200px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     gap: 0;    

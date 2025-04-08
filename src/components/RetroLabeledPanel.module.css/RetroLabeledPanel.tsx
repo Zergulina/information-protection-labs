@@ -8,11 +8,12 @@ type RetroLabeledPanel = {
     labelZIndex: number,
     children: ReactNode,
     className?: string
+    style? : any,
 }
 
-const RetroLabeledPanel = ({ label, labelZIndex, children, className }: RetroLabeledPanel) => {
+const RetroLabeledPanel = ({ label, labelZIndex, children, className, style }: RetroLabeledPanel) => {
     return (
-        <RetroPanel className={`${classes.RetroPanel} ${className}`}>
+        <RetroPanel className={`${classes.RetroPanel} ${className}`} style={style}>
             <RetroLabel className={classes.Label} labelZIndex={labelZIndex}>{label}</RetroLabel>
             {children}
         </RetroPanel>

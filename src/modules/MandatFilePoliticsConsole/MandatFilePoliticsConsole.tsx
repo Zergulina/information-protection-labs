@@ -1,32 +1,27 @@
 import { useEffect, useState } from 'react';
 import RetroInput from '../../UI/RetroInput/RetroInput';
 import RetroLabeledPanel from '../../components/RetroLabeledPanel.module.css/RetroLabeledPanel';
-import classes from './FilePoliticsConsole.module.css'
+import classes from './MandatFilePoliticsConsole.module.css'
 import { invoke } from '@tauri-apps/api/core';
 
-type FilePoliticsConsoleProps = {
+type MandatFilePoliticsConsoleProps = {
     users: string[],
-    filePoliticsMatrix: number[][],
-    setFilePoliticsMatrix: (value: number[][]) => void,
+    userLevels: number[],
+    objectLevels: number[],
     message: string | null,
     setMessage: (value: string | null) => void
 }
 
-const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix, message, setMessage}: FilePoliticsConsoleProps) => {
+const MandatFilePoliticsConsole = ({ users, userLevels, objectLevels, message, setMessage}: MandatFilePoliticsConsoleProps) => {
     const [consoleLog, setConsoleLog] = useState<string[]>([]);
     const [consoleInput, setConsoleInput] = useState<string>("> ");
     const [currentUserIndex, setCurrentUserIndex] = useState<number | null>(null)
+    const [currentObjectIndex, setCurrentObjectIndex] = useState<number | null>(null)
     const [currentCommand, setCurrentCommand] = useState<string | null>(null)
-    const [grantPolicyObjectNumber, setGrantPolicyObjectNumber] = useState<number | null>(null)
-    const [grantPolicyString, setGrantPolicyString] = useState<string | null>(null)
-    const [writeFlag, setWriteFlag] = useState<Boolean>(false);
-
-    const commands = ["read", "write", "grant"]
 
     useEffect(() => {
         if (message != null) {
             setConsoleLog([message, ...consoleLog])
-            console.log("c");
             setMessage(null);
         }
     }, [message])
@@ -35,58 +30,15 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
         setConsoleInput(newValue.length < 2 ? String("> ") : newValue);
     }
 
-    const decimalPoliticsToBinary = (decimal: number) => [(decimal >> 2) & 1, (decimal >> 1) & 1, decimal & 1]
-    const binaryPoliticsToString = (binary: number[]) => !binary.includes(1) ? "Полный запрет" : !binary.includes(0) ? "Полный доступ" : `${binary[0] == 1 ? "Чтение" : ""} ${binary[1] == 1 ? "Запись" : ""} ${binary[2] == 1 ? "Передача прав" : ""}`
-
     const inputEnterHandler = () => {
         let addString = [`${currentUserIndex != null ? (currentUserIndex == 0 ? "root" : users[currentUserIndex - 1]) : ""}> ${consoleInput.substring(2)}`];
         setConsoleInput("> ");
 
-        if (writeFlag) {
+        if (currentObjectIndex != null) {
             const inputLineSubstring = consoleInput.substring(2);
-            invoke("write_to_file", {name: `C:/Users/zergu/source/foo/object${grantPolicyObjectNumber}.txt`, line: inputLineSubstring})
+            invoke("write_to_file", {name: `C:/Users/zergu/source/foo/object${currentObjectIndex}.txt`, line: inputLineSubstring})
             setConsoleLog(['SYSTEM>> Операция выполнена успешно.', ...consoleLog])
-            setWriteFlag(false);
-            return;
-        }
-
-        if (grantPolicyString != null) {
-            const userNameSubstring = consoleInput.substring(2);
-            if (users.includes(userNameSubstring)) {
-                const userIndex = users.findIndex(el => el == userNameSubstring) + 1;
-                let matrix = [...filePoliticsMatrix]
-                console.log(matrix)
-                matrix[userIndex][grantPolicyObjectNumber as number -1] |= (1 << (2 - commands.findIndex((el) => el == grantPolicyString)))
-                console.log(matrix[userIndex][grantPolicyObjectNumber as number - 1] | (1 << (2 - commands.findIndex((el) => el == grantPolicyString))))
-                console.log(matrix)
-                setFilePoliticsMatrix(matrix);
-                addString = ['SYSTEM>> Операция выполнена успешно.', ...addString]
-            }
-            else {
-                addString = ['SYSTEM>> Ошибка! Неизвестный пользователь.', ...addString]
-            }
-            setGrantPolicyString(null);
-            setGrantPolicyObjectNumber(null);
-            setConsoleLog([...addString, ...consoleLog]);
-            return;
-        }
-
-        if (grantPolicyObjectNumber != null) {
-            const commandSubstring = consoleInput.substring(2);
-            if (commands.includes(commandSubstring)) {
-                const commandIndex = commands.findIndex(el => el == commandSubstring);
-                if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][grantPolicyObjectNumber - 1])[commandIndex] == 1) {
-                    setGrantPolicyString(commands[commandIndex])
-                    addString = ['SYSTEM>> Выберите пользователя для передачи прав.', ...addString]
-                }
-                else {
-                    addString = ['SYSTEM>> Нет доступа для выполнения операции.', ...addString]
-                }
-            } else {
-                addString = ['SYSTEM>> Ошибка! Неизвестная команда.', ...addString]
-                setGrantPolicyObjectNumber(null);
-            }
-            setConsoleLog([...addString, ...consoleLog]);
+            setCurrentObjectIndex(null);
             return;
         }
 
@@ -94,11 +46,12 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
             switch (currentCommand) {
                 case "read": {
                     const objectNumber = Number.parseInt(consoleInput.substring(2))
-                    if (!objectNumber || objectNumber > filePoliticsMatrix[0].length) {
+                    if (!objectNumber || objectNumber > objectLevels.length) {
                         addString = ['SYSTEM>> Ошибка! Недопустимый номер объекта.', ...addString]
                     }
                     else {
-                        if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][objectNumber - 1])[0] == 1) {
+                        if (userLevels[currentUserIndex as number - 1] >= objectLevels[objectNumber as number]) {
+                            console.log(userLevels[currentUserIndex as number], objectLevels[objectNumber as number])
                             invoke("read_file", {filename: `C:/Users/zergu/source/foo/object${objectNumber}.txt`}).then(res => {
                                 addString = ['SYSTEM>> Операция выполнена успешно.', 'SYSTEM>> ' + res as string, ...addString]
                                 setCurrentCommand(null);
@@ -114,36 +67,22 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
                 }
                 case "write": {
                     const objectNumber = Number.parseInt(consoleInput.substring(2))
-                    if (!objectNumber || objectNumber > filePoliticsMatrix[0].length) {
+                    if (!objectNumber || objectNumber > objectLevels.length) {
                         addString = ['SYSTEM>> Ошибка! Недопустимый номер объекта.', ...addString]
                     }
                     else {
-                        if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][objectNumber - 1])[1] == 1) {
+                        if (userLevels[currentUserIndex as number - 1] <= objectLevels[objectNumber as number]) {
                             addString = ['SYSTEM>> Напишите строку для добавления в файл.', ...addString]
-                            setGrantPolicyObjectNumber(objectNumber);
-                            setWriteFlag(true)
                         }
                         else {
                             addString = ['SYSTEM>> Нет доступа для выполнения операции.', ...addString]
                         }
                     }
+                    setCurrentObjectIndex(objectNumber);
                     break;
                 }
-                case "grant": {
-                    const objectNumber = Number.parseInt(consoleInput.substring(2))
-                    if (!objectNumber || objectNumber > filePoliticsMatrix[0].length) {
-                        addString = ['SYSTEM>> Ошибка! Недопустимый номер объекта.', ...addString]
-                    }
-                    else {
-                        if (decimalPoliticsToBinary(filePoliticsMatrix[currentUserIndex as number][objectNumber - 1])[2] == 1) {
-                            addString = ['SYSTEM>> Какое право Вы хотите передать?.', ...addString]
-                            setGrantPolicyObjectNumber(objectNumber);
-                        }
-                        else {
-                            addString = ['SYSTEM>> Нет доступа для выполнения операции.', ...addString]
-                        }
-                    }
-                    break;
+                default: {
+                    addString = ['SYSTEM>> Ошибка! Недопустимая команда.', ...addString]
                 }
             }
             setCurrentCommand(null);
@@ -161,10 +100,10 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
                 if (users.includes(userNameSubstring)) {
                     const userIndex = users.findIndex(el => el == userNameSubstring);
                     setCurrentUserIndex(userIndex + 1)
-                    addString = ["Перечень Ваших прав:", `SYSTEM>> Добро пожаловать, пользователь ${users[userIndex]}.`, ...addString]
-                    for (let j = 0; j < filePoliticsMatrix[userIndex + 1].length; j++) {
-                        addString = [`Объект ${j + 1}: ${binaryPoliticsToString(decimalPoliticsToBinary(filePoliticsMatrix[userIndex + 1][j]))}`, ...addString]
-                    }
+                    addString = [`SYSTEM>> Добро пожаловать, пользователь ${users[userIndex]}.`, ...addString]
+                    // for (let j = 0; j < filePoliticsMatrix[userIndex + 1].length; j++) {
+                    //     addString = [`Объект ${j + 1}: ${binaryPoliticsToString(decimalPoliticsToBinary(filePoliticsMatrix[userIndex + 1][j]))}`, ...addString]
+                    // }
                 }
                 else {
                     addString = ['SYSTEM>> Ошибка! Неизвестный пользователь.', ...addString]
@@ -202,7 +141,7 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
     }
 
     return (
-        <RetroLabeledPanel label='Консоль' labelZIndex={0} className={classes.FilePoliticsConsole}>
+        <RetroLabeledPanel label='Консоль' labelZIndex={0} className={classes.MandatFilePoliticsConsole}>
             <div className={classes.ConsoleLog}>
                 {
                     consoleLog.map(el => <div className={classes.ConsoleLogUnit}>{el}</div>)
@@ -213,4 +152,4 @@ const FilePoliticsConsole = ({ users, filePoliticsMatrix, setFilePoliticsMatrix,
     );
 };
 
-export default FilePoliticsConsole;
+export default MandatFilePoliticsConsole;

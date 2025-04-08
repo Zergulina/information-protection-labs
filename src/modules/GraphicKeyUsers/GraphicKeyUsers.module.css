@@ -1,0 +1,43 @@
+.GraphicKeyUsers {
+    width: 100%;
+}
+
+.Container {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.UsersContainer {
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+}
+
+.InputWrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.InputLabel {
+    width: 270px;
+}
+
+.InputLabelContainer {
+    display: flex;
+    align-items: center;
+    
+}
+
+.InputContainer {
+    flex-grow: 1;
+}
+
+.Input {
+    width: 100%;
+}
+
+.Button {
+    width: 200px;
+}
